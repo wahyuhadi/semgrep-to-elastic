@@ -1,0 +1,2 @@
+# semgrep-integrator-elastic
+
