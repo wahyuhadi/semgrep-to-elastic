@@ -70,7 +70,7 @@ type ElasticModels struct {
 func main() {
 	r := gin.Default()
 	r.POST("/elastic", elastic)
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(":8888") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 func elastic(c *gin.Context) {
