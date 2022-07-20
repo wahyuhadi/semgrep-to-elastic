@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/elastic/go-elasticsearch/v8"
@@ -15,10 +16,10 @@ import (
 )
 
 var (
-	elasticURI   = "http://10.128.0.15:9200"
+	elasticURI   = os.Getenv("elastic_uri")
 	indexElastic = "semgrep"
-	Username     = ""
-	Password     = ""
+	Username     = os.Getenv("elastic_user")
+	Password     = os.Getenv("elastic_pass")
 )
 
 type ElasticModels struct {
@@ -94,6 +95,8 @@ func elastic(c *gin.Context) {
 func Elastic(data ElasticModels) (esapi.Response, error) {
 	cfg := elasticsearch.Config{
 		Addresses: []string{elasticURI},
+		Username:  Username,
+		Password:  Password,
 		Transport: &http.Transport{
 			MaxIdleConnsPerHost:   10,
 			ResponseHeaderTimeout: time.Second,
