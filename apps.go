@@ -83,6 +83,7 @@ func elastic(c *gin.Context) {
 
 	resp, err := Elastic(obj)
 	if err != nil {
+		fmt.Println("Error push to API ", err.Error())
 		c.String(http.StatusForbidden, "Error push into elastic")
 		return
 	}
