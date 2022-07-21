@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
-	"semgrep-integrator-elastic/log"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -83,11 +84,22 @@ func elastic(c *gin.Context) {
 	}
 
 	// resp, err := Elastic(obj)
-	logger, file := log.New("semgrep", "logs/")
-	defer func() {
-		logger.Warning(string(b))
-		_ = file.Close()
-	}()
+
+	f, err := os.OpenFile("logs/semgrep.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Println(err)
+		fmt.Println("Error push to API ", err.Error())
+		c.String(http.StatusForbidden, "Error push into elastic")
+		return
+	}
+	defer f.Close()
+	if _, err := f.WriteString(string(b) + "\n"); err != nil {
+		log.Println(err)
+		fmt.Println("Error push to API ", err.Error())
+		c.String(http.StatusForbidden, "Error push into elastic")
+		return
+	}
 
 	if err != nil {
 		fmt.Println("Error push to API ", err.Error())
