@@ -72,6 +72,7 @@ func main() {
 
 func elastic(c *gin.Context) {
 	var obj ElasticModels
+	obj.Timestamp = time.Now()
 	err := c.ShouldBind(&obj)
 	if err != nil {
 		c.String(http.StatusForbidden, "error binding body")
